@@ -1,0 +1,1 @@
+function flag = checkshrinkcond(method)
