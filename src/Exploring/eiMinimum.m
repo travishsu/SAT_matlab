@@ -1,5 +1,16 @@
 function ei = eiMinimum(y_hat, y, mse)
-
+%> =================================================
+%> Given a prediction at observation point, and its corresponding mean
+%> sqaure error, also give responses of all data to this function, this
+%> function measure the expected improvement at the observation point
+%>
+%> Input
+%>       y_hat:      prediction at a point
+%>       y    :      N-by-1 vector, responses of current data set (training set)
+%>       mse  :      mean square error at that point
+%> Output
+%>       ei   :      expected improvement at that point
+%> =================================================
     % Best point so far
     y_min = min(y);
     

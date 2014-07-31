@@ -1,15 +1,22 @@
-function info = Kriging_info(x, y)
-
-    % I: x=[x1;x2;x3;...]
-    %    S=[S1;S1;S1;...]
+function info = Kriging_info(X, Y)
+%> =================================================
+%> Given N data with dimension numDim, create a handle of Kriging model.
+%>
+%> Input
+%>       X   :  N-by-numDim matrix, sample(feature) data,   ex: [x1; x2; x3;...; xN]
+%>       Y   :  N-by-1 vector, response corresponding to X, ex: [y1; y2; y3;...; yN]
+%> Output
+%>       info:  
+%>
+%> =================================================
     info.SigmaSq = -100;
 
-    NAN = isnan(y);
-    x = x(find(~NAN),:);
-    y = y(find(~NAN));
+    NAN = isnan(Y);
+    X = X(find(~NAN),:);
+    Y = Y(find(~NAN));
 
-    sizex = size(x);
-    sizes = size(y);
+    sizex = size(X);
+    sizes = size(Y);
     
     factor = 0;
 
@@ -20,14 +27,14 @@ function info = Kriging_info(x, y)
     k = sizex(2);
 %     [x, y] = cluster_remove(x, y, 0.001);
     
-    sizex = size(x);
+    sizex = size(X);
     
     global ModelInfo;
-    ModelInfo.X = x;
-    ModelInfo.y = y;
+    ModelInfo.X = X;
+    ModelInfo.y = Y;
 
     while info.SigmaSq < 0
-        UTheta =  .5;
+        UTheta =  1;
         LTheta =  -2;
         DTheta = UTheta-LTheta;
         
@@ -59,29 +66,29 @@ function info = Kriging_info(x, y)
         one = ones(n,1);
         
         if isinf(minLike)
-            info.mu     = (one'*(ModelInfo.Psi\y))/(one'*(ModelInfo.Psi\one));
+            info.mu     = (one'*(ModelInfo.Psi\Y))/(one'*(ModelInfo.Psi\one));
             Y = ModelInfo.y - info.mu*one;
             info.Inv    = ModelInfo.Psi\Y;
             info.U      = ModelInfo.U;
             info.Psi    = ModelInfo.Psi;
-            info.X      = x;
+            info.X      = X;
             info.Theta  = ModelInfo.Theta;
             info.p      = ModelInfo.p;
-            info.y      = y;
+            info.y      = Y;
             
             info.SigmaSq = (Y'*(ModelInfo.Psi\Y))/n;
            
         else
             
-            info.mu     = (one'*(ModelInfo.U\(ModelInfo.U'\y)))/(one'*(ModelInfo.U\(ModelInfo.U'\one)));
+            info.mu     = (one'*(ModelInfo.U\(ModelInfo.U'\Y)))/(one'*(ModelInfo.U\(ModelInfo.U'\one)));
             Y = ModelInfo.y - info.mu*one;
             info.Inv    = ModelInfo.U\(ModelInfo.U'\Y);
             info.U      = ModelInfo.U;
             info.Psi    = ModelInfo.Psi;
-            info.X      = x;
+            info.X      = X;
             info.Theta  = ModelInfo.Theta;
             info.p      = ModelInfo.p;
-            info.y      = y;
+            info.y      = Y;
             
             info.SigmaSq = (Y'*(ModelInfo.U\(ModelInfo.U'\Y)))/n;
         end

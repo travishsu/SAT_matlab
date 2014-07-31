@@ -1,6 +1,15 @@
 function [X_new, Y_new] = zoom_shrink_dropoutside(window, X, Y)
-
-    % Drop off the samples outside the window
+% =================================================
+% Drop off the samples which are outside the window
+%
+% Input
+%       window: 1-by-2*numDim vector, info of window region.
+%       X     :  N-by-numDim matrix, sample(feature) data.
+%       Y     :  N-by-1 vector, response corresponding to X. 
+% Output
+%       X_new :  N-by-numDim matrix, updated samples.
+%       Y_new :  N-by-1 vector, updated responses.
+% =================================================
     
     N = size(X,1);
     X_new = X;

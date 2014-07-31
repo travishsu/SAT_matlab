@@ -1,16 +1,21 @@
 function window_new = zoom_shrink_Window(X, Y, window_old, shrink_ratio, opt_prob)
-
-%         Author      : Yi-Chung Hsu
-%         Last Updated: 2014/7/9
-%         Desciption  : 
-%            Determine a new smaller window and locate the position of edge
-%         Usage       :
-%               Input:
-%                   X, Y: training set;
-%                   window_old: 1-by-4info of old window; 
-%                   shrink_ratio:
-%                   opt_prob: This function works when opt_prob is 'max' or 'min'.
-
+% =================================================
+% Author      : Yi-Chung Hsu
+% Last Updated: 2014/7/30
+% Desciption  : 
+%       Determine a new smaller window and locate the position of edge,
+%       the optimal sample in data set is chosen as the center of new
+%       window.
+% Usage       :
+%       Input:
+%           X, Y        : training set;
+%           window_old  : 1-by-2*numDim vector, info of old window; 
+%           shrink_ratio: 1-by-numDim vector, specify ratioes in every
+%                         dimension.
+%           opt_prob    : This function works when opt_prob is 'max' or 'min'.
+%       Output:
+%           window_new  : 1-by-2*numDim vector, info of new window
+% =================================================
 
         dim          = size(X, 2);
         length_direc = zeros(dim, 1);
@@ -39,5 +44,5 @@ function window_new = zoom_shrink_Window(X, Y, window_old, shrink_ratio, opt_pro
             window_new = window_old;
             
         end
-        window_new
+
 end
