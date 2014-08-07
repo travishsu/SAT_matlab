@@ -1,25 +1,26 @@
-function Info = cokriging(Xe, Xc, ye, yc)
+function Info = coKriging_info(Xe, Xc, Ye, Yc)
 
     global ModelInfo
     ModelInfo.Xe = Xe;
     ModelInfo.Xc = Xc;
-    ModelInfo.ye = ye;
-    ModelInfo.yc = yc;
+    ModelInfo.ye = Ye;
+    ModelInfo.yc = Yc;
 
     k  = size(Xe, 2);
     ne = size(Xe, 1);
     nc = size(Xc, 1);
-    p  = 2;
 
-    upperbound_cheap =  0.5*ones(1, k);
-    lowerbound_cheap = -0.5*ones(1, k);
+    upperbound_cheap_p = [ 1*ones(1, k), 2];
+    lowerbound_cheap_p = [-2*ones(1, k), 1];
 
-    Paramc = ga(@likelihoodc, k,  [], [], [], [], lowerbound_cheap, upperbound_cheap);
+    Paramc = ga(@likelihoodc, k+1,  [], [], [], [], lowerbound_cheap_p, upperbound_cheap_p);
 
-    ModelInfo.Thetac = Paramc(1:end);
+    ModelInfo.Thetac = Paramc(1:end-1);
+    ModelInfo.p      = Paramc(end)*ones(1, k);
+    p                = ModelInfo.p;
 
-    upperbound_difference_rho = [ 0.5*ones(1, k),  2];
-    lowerbound_difference_rho = [-0.5*ones(1, k),  0.1];
+    upperbound_difference_rho = [ 1*ones(1, k),  2];
+    lowerbound_difference_rho = [-2*ones(1, k),  0.1];
 
     Params = ga(@likelihoodd, k+1,[], [], [], [],lowerbound_difference_rho, upperbound_difference_rho);
 
@@ -28,10 +29,10 @@ function Info = cokriging(Xe, Xc, ye, yc)
 
     %     buildcokriging;
     thetad = 10.^Params(1:k);
-    thetac = 10.^Paramc(1:end);
+    thetac = 10.^Paramc(1:end-1);
     rho    = Params(k+1);
     one    = ones(ne+nc,1);
-    y      = [yc; ye];
+    y      = [Yc; Ye];
 
     PsicXc=zeros(nc,nc);
     for i=1:nc
@@ -65,10 +66,10 @@ function Info = cokriging(Xe, Xc, ye, yc)
     end
     PsidXe = PsidXe+PsidXe'+eye(ne)+eye(ne).*eps;
     
-    muc=(ones(nc,1)'*(PsicXc\yc))/(ones(nc,1)'*(PsicXc\ones(nc,1)));
+    muc=(ones(nc,1)'*(PsicXc\Yc))/(ones(nc,1)'*(PsicXc\ones(nc,1)));
     mud=(ones(ne,1)'*(PsidXe\ModelInfo.d))/(ones(ne,1)'*(PsidXe\ones(ne,1)));
 
-    ModelInfo.SigmaSqrc=(yc-ones(nc,1).*muc)'*(PsicXc\(yc-ones(nc,1).*muc))/nc;
+    ModelInfo.SigmaSqrc=(Yc-ones(nc,1).*muc)'*(PsicXc\(Yc-ones(nc,1).*muc))/nc;
     ModelInfo.SigmaSqrd=(ModelInfo.d-ones(ne,1).*mud)'*(PsidXe\(ModelInfo.d-ones(ne,1).*mud))/ne;
 
     ModelInfo.C=[ModelInfo.SigmaSqrc*PsicXc,   rho*ModelInfo.SigmaSqrc*PsicXcXe;

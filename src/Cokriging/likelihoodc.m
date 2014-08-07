@@ -32,9 +32,10 @@ function NegLnLikec = likelihoodc(x)
     global ModelInfo
     Xc = ModelInfo.Xc;
     yc = ModelInfo.yc;
+    
     nc = size(Xc,1);
-    thetac = 10.^x;
-    p = 2;  % added p definition (February 10)
+    thetac = 10.^x(1:end-1);
+    p = x(end);
     one = ones(nc,1);
     PsicXc = zeros(nc,nc);
     for i = 1:nc

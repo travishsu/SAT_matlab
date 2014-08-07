@@ -1,8 +1,8 @@
 function [y, mse] = Kriging_pred(x, info)
-%> =================================================
+%=================================================
 %> Based on (info) generated in Kriging_info, this function predict the value
 %> (y) and mean square error (mse) at (x)
-%> =================================================
+%=================================================
 
     Inv     = info.Inv;
     mu      = info.mu;

@@ -1,10 +1,10 @@
-function ex_twovar
+function demo_kriging
     % TRY WINDOW-VERSION 2014/6/10
 
     %% Basic variables setting
     numDim       = 2;                         % Replace it!
     numInitial   = 8;                         % Replace it!
-    numIteration = 30;                        % Replace it!
+    maxIteration = 30;                        % Replace it!
     gridsize     = [3, 3];                    % Replace it!
 
     %% Upper bound and lower bound
@@ -12,7 +12,7 @@ function ex_twovar
            % [lbx, ubx, lby, uby]              (NEW method after 6/10)
 
     %% Initial sampling
-    X = LHD(numInitial, numDim, window);
+    X = LHD(numInitial, numDim, window); % Use LHD if there's no data given by user.
 
     Y = zeros(numInitial, 1);
     for i = 1:numInitial
@@ -24,7 +24,7 @@ function ex_twovar
 
 
     %% Iteration exploration
-    for loop = 1:numIteration
+    for loop = 1:maxIteration
 
         %% Dynamic gridsize
         if loop < 10

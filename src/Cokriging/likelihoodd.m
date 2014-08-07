@@ -36,12 +36,17 @@ Xe = ModelInfo.Xe;
 ye = ModelInfo.ye;
 Xc = ModelInfo.Xc;
 yc = ModelInfo.yc;
+
 ne = size(Xe, 1); 
 nc = size(Xc, 1);
+
 k = size(Xe,2);
+
 thetac = 10.^ModelInfo.Thetac;
 thetad = 10.^x(1:k);
-p = 2;  % added p definition (February 10)
+
+p = ModelInfo.p;  % added p definition (February 10)
+
 rho = x(k+1);
 one = ones(ne,1);
 

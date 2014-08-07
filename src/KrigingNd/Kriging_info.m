@@ -1,5 +1,5 @@
 function info = Kriging_info(X, Y)
-%> =================================================
+%=================================================
 %> Given N data with dimension numDim, create a handle of Kriging model.
 %>
 %> Input
@@ -8,7 +8,7 @@ function info = Kriging_info(X, Y)
 %> Output
 %>       info:  
 %>
-%> =================================================
+%=================================================
     info.SigmaSq = -100;
 
     NAN = isnan(Y);
@@ -38,7 +38,7 @@ function info = Kriging_info(X, Y)
         LTheta =  -2;
         DTheta = UTheta-LTheta;
         
-        Up     = 2.5;
+        Up     = 2;
         Lp     = 1;
         
         UpperTheta = ones(1,k).* UTheta;
@@ -46,7 +46,12 @@ function info = Kriging_info(X, Y)
         
         UpperP = ones(1,k).* Up;
         LowerP = ones(1,k).* Lp;
-        %         [ModelInfo.Theta, MinNegLnLikelihood]   = ga(@likelihood,k,[],[],[],[], LowerTheta,UpperTheta);
+%         [Theta, MinNegLnLikelihood]   = ga(@likelihood, 2*k,[],[],[],[], [LowerTheta, LowerP], ...
+%                                                                          [UpperTheta, UpperP]);
+%         ModelInfo.Theta = Theta(1, 1:k);
+%         ModelInfo.p     = Theta(1, k+1:end);
+%         [~, ModelInfo.Psi, ModelInfo.U] = likelihood(Theta(1, :));
+        
         
         option = psoptimset('TolMesh', 1e-12, 'Display', 'off', 'InitialMeshSize', DTheta*0.4);
         Theta = zeros(15, 2*k);
@@ -54,18 +59,22 @@ function info = Kriging_info(X, Y)
         lhs   = lhsdesign(15, k);
         
         for i = 1:15
-            [Theta(i,:), Like(i)] = patternsearch(@likelihood, [DTheta*lhs(i,:)+LowerTheta, 2*ones(1,k)], [], [], [], [], [LowerTheta, LowerP], [UpperTheta, UpperP], [], option);
+            [Theta(i,:), Like(i)] = patternsearch(@likelihood, ...
+                                                  [DTheta*lhs(i,:)+LowerTheta, 2*ones(1,k)], [], [], [], [], ...
+                                                  [LowerTheta, LowerP], ...
+                                                  [UpperTheta, UpperP], [], option);
         end
         [minLike, Idx] = min(Like);
         ModelInfo.Theta = Theta(Idx, 1:k);
         ModelInfo.p     = Theta(Idx, k+1:end);
-        [NegLnLike, ModelInfo.Psi, ModelInfo.U] = likelihood(Theta(Idx, :));
+        [~, ModelInfo.Psi, ModelInfo.U] = likelihood(Theta(Idx, :));
         
         
         n   = sizex(1);
         one = ones(n,1);
         
         if isinf(minLike)
+%         if isinf(MinNegLnLikelihood) 
             info.mu     = (one'*(ModelInfo.Psi\Y))/(one'*(ModelInfo.Psi\one));
             Y = ModelInfo.y - info.mu*one;
             info.Inv    = ModelInfo.Psi\Y;
