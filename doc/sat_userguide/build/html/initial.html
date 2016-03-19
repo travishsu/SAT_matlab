@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Initialization &mdash; SAT User Guide 0.8 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="SAT User Guide 0.8 documentation" href="index.html" />
+    <link rel="next" title="Modeling" href="modeling.html" />
+    <link rel="prev" title="Data Arrangement" href="data.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modeling.html" title="Modeling"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="data.html" title="Data Arrangement"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">SAT User Guide 0.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="initialization">
+<h1>Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="problem-definition">
+<h2>Problem Definition<a class="headerlink" href="#problem-definition" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="constant-variables">
+<h3>Constant Variables<a class="headerlink" href="#constant-variables" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>numDim</strong></li>
+<li><strong>maxIteration</strong></li>
+<li><strong>maxTime</strong></li>
+</ul>
+</div>
+<div class="section" id="function-evaluation">
+<h3>Function Evaluation<a class="headerlink" href="#function-evaluation" title="Permalink to this headline">¶</a></h3>
+<p>In optimization procedure, it always asks to evaluate function value at a series of points repeatly, in this User Guide we assume objective function called <strong>YourFunc</strong>, this function outputs a real value:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">value</span> <span class="o">=</span> <span class="n">YourFunc</span><span class="p">(</span><span class="n">sample</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="search-region">
+<h3>Search Region<a class="headerlink" href="#search-region" title="Permalink to this headline">¶</a></h3>
+<p>Our model can predict everywhere in space same as samples, but to predict the value at some point far far away from training data is meaningfulless, since training set has tiny even no influence to that points.</p>
+<p>You are required to set a rectangular region <strong>window</strong> where we select sample at every iteration:</p>
+<div class="highlight-python"><div class="highlight"><pre>window = [x_lb, x_ub, y_lb, y_ub]
+
+% x_lb: lower bound in x_axis
+% x_ub: upper bound in x_axis
+% y_lb: lower bound in y_axis
+% y_ub: upper bound in y_axis
+</pre></div>
+</div>
+<p>Here we assume <strong>numDim</strong> is 2, then we define <strong>window</strong> as a rectangular region, <strong>window</strong> will be a 1-by-2*2 (1-by-2*numDim) vector.</p>
+</div>
+</div>
+<div class="section" id="observation-grid">
+<h2>Observation Grid<a class="headerlink" href="#observation-grid" title="Permalink to this headline">¶</a></h2>
+<p>Given a vector of alternating corresponding lower and upper bounds along with a vector of the corresponding <strong>gridsize</strong>, construct multiple return values for reshaping the structure. It returns a integer number length of the number of observation points in the grid, a length by k matrix called grid containing every observation point in every row, a length by 1 vector matrix called <strong>P</strong> for containing the prediction value corresponding to ever observation point, a length by 1 vector called <strong>MSE</strong> for containing the mean square error corresponding to every observation point, and a length by 1 vector called <strong>EI</strong> for containing the expected improvement corresponding to every observation point. The output vectors, <strong>P</strong>, <strong>MSE</strong>, and <strong>EI</strong> do not contain actual values from this function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">gridLen</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">MSE</span><span class="p">,</span> <span class="n">EI</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid_cut</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">gridsize</span><span class="p">);</span>
+</pre></div>
+</div>
+<ul>
+<li><dl class="first docutils">
+<dt>Input</dt>
+<dd><ul class="first last simple">
+<li><strong>window</strong>  :  [lb1, ub1, lb2, ub2, ..., lbk, ubk]</li>
+<li><strong>gridsize</strong>:  [ g1,  g2, ...,  gk]</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Output</dt>
+<dd><ul class="first last simple">
+<li><strong>gridLen</strong> :  Integer number, number of observation points in grid</li>
+<li><strong>G</strong>       :  gridLen-by-k matrix, list every observation point in every single row</li>
+<li><strong>P</strong>       :  gridLen-by-1 vector, list for fill with prediction value corresponding to every observation point</li>
+<li><strong>MSE</strong>     :  gridLen-by-1 vector, list for fill with mean square error corresponding to every observation point</li>
+<li><strong>EI</strong>      : gridLen-by-1 vector, list for fill with expected improvement corresponding to every observation point</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Variable <strong>gridsize</strong> means how dense observation set to list, it is a 1-by-numDim vector, each component represent how many grid to cut in each axis.</p>
+</div>
+<div class="section" id="latin-hypercube-design">
+<h2>Latin Hypercube Design<a class="headerlink" href="#latin-hypercube-design" title="Permalink to this headline">¶</a></h2>
+<p>For <strong>numDim</strong>-dimensional region bounded in <strong>window</strong>, generate a Latin-Hypercube Design. Requires an integer representing the number of designs <strong>numInitial</strong>, an integer representing the dimension of designs <strong>numDim</strong> and a 1 by 2*numDim vector representing the region’s edges in each dimension window. Will output a <strong>numInitial</strong> by <strong>numDim</strong> matrix over a region in <strong>window</strong> Initial:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">samples</span> <span class="o">=</span> <span class="n">LHD</span><span class="p">(</span><span class="n">numInitial</span><span class="p">,</span> <span class="n">numDim</span><span class="p">,</span> <span class="n">window</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="training-set-initialization">
+<h2>Training Set Initialization<a class="headerlink" href="#training-set-initialization" title="Permalink to this headline">¶</a></h2>
+<p>Constructing Kriging model needs a set of training data.</p>
+<div class="section" id="kriging">
+<h3>Kriging<a class="headerlink" href="#kriging" title="Permalink to this headline">¶</a></h3>
+<p>Put objective data in values:</p>
+<div class="highlight-python"><div class="highlight"><pre>values = zeros(size(samples, 1), 1);
+for idx = 1:size(samples, 1)
+    values(idx) = YourFunc(samples(idx,:));
+end
+</pre></div>
+</div>
+</div>
+<div class="section" id="co-kriging">
+<h3>Co-Kriging<a class="headerlink" href="#co-kriging" title="Permalink to this headline">¶</a></h3>
+<p>In Co-Kriging modeling method, it&#8217;s supposed that there are available to use two fidelities of evaluation function, they are supposed to solve the same problem but have different levels of approximation.</p>
+<p>One of them has more accurate, Co-Kriging will construct surrogate for high-fidelity objective.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Initialization</a><ul>
+<li><a class="reference internal" href="#problem-definition">Problem Definition</a><ul>
+<li><a class="reference internal" href="#constant-variables">Constant Variables</a></li>
+<li><a class="reference internal" href="#function-evaluation">Function Evaluation</a></li>
+<li><a class="reference internal" href="#search-region">Search Region</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#observation-grid">Observation Grid</a></li>
+<li><a class="reference internal" href="#latin-hypercube-design">Latin Hypercube Design</a></li>
+<li><a class="reference internal" href="#training-set-initialization">Training Set Initialization</a><ul>
+<li><a class="reference internal" href="#kriging">Kriging</a></li>
+<li><a class="reference internal" href="#co-kriging">Co-Kriging</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="data.html"
+                        title="previous chapter">Data Arrangement</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="modeling.html"
+                        title="next chapter">Modeling</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/initial.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modeling.html" title="Modeling"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="data.html" title="Data Arrangement"
+             >previous</a> |</li>
+        <li><a href="index.html">SAT User Guide 0.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, NTU COLA Lab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

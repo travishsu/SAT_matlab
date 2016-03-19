@@ -1,5 +1,17 @@
 function [f_hat, mse] = coKriging_pred(x, Info)
 
+%> @file coKriging_pred.m
+%=================================================
+%> Based on (Info) generated in coKriging_info, this function predict the value
+%> (f_hat) and mean square error (mse) at (x)
+%>
+%> @param   x       Position where value user want to predict.
+%> @param   Info    Co-Kriging model handle constructed by coKriging_info.
+%> 
+%> @retval  f_hat   Prediction value at x
+%> @retval  mse     Mean square error at x
+%=================================================
+
     Xe = Info.Xe;
     Xc = Info.Xc;
     ye = Info.ye;

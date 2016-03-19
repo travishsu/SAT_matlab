@@ -62,7 +62,7 @@ Popsize = GAOptions.PopulationSize;
 % = Number of generations =
 if isfield(GAOptions,'Generations')==0
     % Default value
-	GAOptions.Generations = 100;
+	GAOptions.Generations = 10;
 end
 Gens = GAOptions.Generations;
 

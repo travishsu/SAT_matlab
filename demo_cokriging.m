@@ -1,15 +1,15 @@
 function demo_cokriging
 
     %% Basic variables setting
-    numDim           = 2;                         % Replace it!
-    numLowInitial    = 4;                         % Replace it!
-    numHighInitial   = 4;                         % Replace it!
-    maxIteration     = 30;                        % Replace it!
+    numDim           = 2;                           % Replace it!
+    numLowInitial    = 4;                           % Replace it!
+    numHighInitial   = 4;                           % Replace it!
+    maxIteration     = 30;                          % Replace it!
     gridsize         = [50, 50];                    % Replace it!
 
     %% Upper bound and lower bound
-    window = [ -5   10   -0   15];           % Replace it!
-           % [lbx, ubx, lby, uby]              (NEW method after 6/10)
+    window = [ -5   10   -0   15];                  % Replace it!
+           % [lbx, ubx, lby, uby]                     (NEW method after 6/10)
 
     %% Initial sampling
     design = LHD(numLowInitial+numHighInitial, numDim, window); % Use LHD if there's no data given by user.
@@ -17,13 +17,13 @@ function demo_cokriging
     X_L = design(1:numLowInitial, :); 
     Y_L = zeros(numLowInitial, 1);
     for i = 1:numLowInitial
-        Y_L(i) = LowfuncEval(X_L(i, :));      % Replace it!
+        Y_L(i) = LowfuncEval(X_L(i, :));            % Replace it!
     end
 
     X_H = design(numLowInitial+1:end, :); 
     Y_H = zeros(numHighInitial, 1);
     for i = 1:numHighInitial
-        Y_H(i) = HighfuncEval(X_H(i, :));      % Replace it!
+        Y_H(i) = HighfuncEval(X_H(i, :));           % Replace it!
     end
     
     %% Prediction region mesh and allocation (NEW method after 6/10)

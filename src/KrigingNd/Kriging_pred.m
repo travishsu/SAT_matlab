@@ -1,7 +1,14 @@
 function [y, mse] = Kriging_pred(x, info)
+%> @file Kriging_pred.m
 %=================================================
 %> Based on (info) generated in Kriging_info, this function predict the value
 %> (y) and mean square error (mse) at (x)
+%>
+%> @param   x       Position where value user want to predict.
+%> @param   info    Kriging model handle constructed by Kriging_info.
+%> 
+%> @retval  y       Prediction value at x
+%> @retval  mse     Mean square error at x
 %=================================================
 
     Inv     = info.Inv;

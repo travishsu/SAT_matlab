@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>“Zoom in” Strategy &mdash; SAT User Guide 0.8 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="SAT User Guide 0.8 documentation" href="index.html" />
+    <link rel="prev" title="Infilling" href="infilling.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="infilling.html" title="Infilling"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">SAT User Guide 0.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="zoom-in-strategy">
+<h1>&#8220;Zoom in&#8221; Strategy<a class="headerlink" href="#zoom-in-strategy" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="brief-idea">
+<h2>Brief Idea<a class="headerlink" href="#brief-idea" title="Permalink to this headline">¶</a></h2>
+<p>To find the optimal solution, shrink the search region might accelerate optimization procedure.</p>
+</div>
+<div class="section" id="shrink-search-region-and-create-new-window">
+<h2>Shrink Search Region and Create New Window<a class="headerlink" href="#shrink-search-region-and-create-new-window" title="Permalink to this headline">¶</a></h2>
+<p>This function determines a new smaller window and locates the position of edge. The optimal sample in the data set is chosen as the center of the new data. Requires the training set <strong>samples</strong> and <strong>values</strong>, a 1 by 2*numDim vector info of old window <strong>window_old</strong>, a 1 by <strong>numDim</strong> vector specifying the ratios in every dimension <strong>shrink_ratio</strong>, and to set <strong>opt_prob</strong> to be either <strong>max</strong> or <strong>min</strong>. The output is a 1 by 2*numDim vector of the info of the new window:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">window_new</span> <span class="o">=</span> <span class="n">zoom_shrink_Window</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">window_old</span><span class="p">,</span> <span class="n">shrink_ratio</span><span class="p">,</span> <span class="n">opt_prob</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="drop-off-samples-not-belong-to-new-window">
+<h2>Drop Off Samples Not Belong to New Window<a class="headerlink" href="#drop-off-samples-not-belong-to-new-window" title="Permalink to this headline">¶</a></h2>
+<p>This function drops off the samples which are outside the window. Requires a 1 by 2*numDim vector info of window region <strong>window</strong>, an N by <strong>numDim</strong> matrix of sample (feature data) <strong>samples</strong>, and an N by 1 vector corresponding to <strong>samples</strong> response <strong>values</strong>. The output <strong>samples_new</strong> is an N by <strong>numDim</strong> matrix with updated samples and values_new is an N by 1 vector of the updated responses:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">samples</span><span class="p">,</span> <span class="n">values</span><span class="p">]</span> <span class="o">=</span> <span class="n">zoom_shrink_dropoutside</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">values</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="disadvantage">
+<h2>Disadvantage<a class="headerlink" href="#disadvantage" title="Permalink to this headline">¶</a></h2>
+<p>On the other hand, this strategy might converge to local optimum</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">&#8220;Zoom in&#8221; Strategy</a><ul>
+<li><a class="reference internal" href="#brief-idea">Brief Idea</a></li>
+<li><a class="reference internal" href="#shrink-search-region-and-create-new-window">Shrink Search Region and Create New Window</a></li>
+<li><a class="reference internal" href="#drop-off-samples-not-belong-to-new-window">Drop Off Samples Not Belong to New Window</a></li>
+<li><a class="reference internal" href="#disadvantage">Disadvantage</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="infilling.html"
+                        title="previous chapter">Infilling</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/zoomin.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="infilling.html" title="Infilling"
+             >previous</a> |</li>
+        <li><a href="index.html">SAT User Guide 0.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, NTU COLA Lab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

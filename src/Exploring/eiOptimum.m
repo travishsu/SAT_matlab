@@ -1,7 +1,20 @@
 function ei = eiOptimum(y_hat, y, mse, optflag)
 
-    % optflag (+1) : Maximization
-    %         (-1) : Minimization
+%> @file eiOptimum.m
+%=================================================
+%> @brief Measure the expected improvement for minimization
+%>
+%> Given a prediction at observation point, and its corresponding mean
+%> sqaure error, also give responses of all data to this function, this
+%> function measure the expected improvement at the observation point
+%>
+%> @param   y_hat   prediction at a point
+%> @param   y       N-by-1 vector, responses of current data set (training set)
+%> @param   mse     mean square error at that point
+%> @param   optflag 1 for maximization and -1 for minimization
+%> 
+%> @retval  ei      expected improvement at that point
+%=================================================
     
     y_hat = y_hat*optflag;
     y     = y*optflag;

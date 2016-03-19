@@ -1,0 +1,27 @@
+\BOOKMARK [0][-]{chapter.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.1.1}{Preface}{chapter.1}% 2
+\BOOKMARK [1][-]{section.1.2}{SAT Framework}{chapter.1}% 3
+\BOOKMARK [1][-]{section.1.3}{Stochastical Modeling Method}{chapter.1}% 4
+\BOOKMARK [0][-]{chapter.2}{Data Arrangement}{}% 5
+\BOOKMARK [1][-]{section.2.1}{Training Set}{chapter.2}% 6
+\BOOKMARK [1][-]{section.2.2}{Commonly Used Variables}{chapter.2}% 7
+\BOOKMARK [0][-]{chapter.3}{Initialization}{}% 8
+\BOOKMARK [1][-]{section.3.1}{Problem Definition}{chapter.3}% 9
+\BOOKMARK [1][-]{section.3.2}{Observation Grid}{chapter.3}% 10
+\BOOKMARK [1][-]{section.3.3}{Latin Hypercube Design}{chapter.3}% 11
+\BOOKMARK [1][-]{section.3.4}{Training Set Initialization}{chapter.3}% 12
+\BOOKMARK [0][-]{chapter.4}{Modeling}{}% 13
+\BOOKMARK [1][-]{section.4.1}{Kriging}{chapter.4}% 14
+\BOOKMARK [1][-]{section.4.2}{Co-Kriging}{chapter.4}% 15
+\BOOKMARK [0][-]{chapter.5}{Uncertainty Measurement}{}% 16
+\BOOKMARK [1][-]{section.5.1}{Mean Square Error \(MSE\)}{chapter.5}% 17
+\BOOKMARK [1][-]{section.5.2}{Expected Improvement \(EI\)}{chapter.5}% 18
+\BOOKMARK [0][-]{chapter.6}{Infilling}{}% 19
+\BOOKMARK [1][-]{section.6.1}{New Sampling}{chapter.6}% 20
+\BOOKMARK [1][-]{section.6.2}{Evaluate and Append}{chapter.6}% 21
+\BOOKMARK [0][-]{chapter.7}{``Zoom in'' Strategy}{}% 22
+\BOOKMARK [1][-]{section.7.1}{Brief Idea}{chapter.7}% 23
+\BOOKMARK [1][-]{section.7.2}{Shrink Search Region and Create New Window}{chapter.7}% 24
+\BOOKMARK [1][-]{section.7.3}{Drop Off Samples Not Belong to New Window}{chapter.7}% 25
+\BOOKMARK [1][-]{section.7.4}{Disadvantage}{chapter.7}% 26
+\BOOKMARK [0][-]{chapter.8}{Indices and tables}{}% 27

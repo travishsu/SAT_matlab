@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Modeling &mdash; SAT User Guide 0.8 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="SAT User Guide 0.8 documentation" href="index.html" />
+    <link rel="next" title="Infilling" href="infilling.html" />
+    <link rel="prev" title="Initialization" href="initial.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="infilling.html" title="Infilling"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="initial.html" title="Initialization"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">SAT User Guide 0.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="modeling">
+<h1>Modeling<a class="headerlink" href="#modeling" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="kriging">
+<h2>Kriging<a class="headerlink" href="#kriging" title="Permalink to this headline">¶</a></h2>
+<p>Given <strong>N</strong> data with dimension <strong>numDim</strong>, create a handle of the Kriging model. In this function <strong>samples</strong> is a <strong>n</strong> by <strong>numDim</strong> matrix of sample(feature data) and <strong>values</strong> is an <strong>n</strong> by 1 vector that corresponds with <strong>samples</strong>. Outputs <strong>model</strong> structure:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Kmodel</span> <span class="o">=</span> <span class="n">Kriging_info</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">values</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The Kriging kernel function output <strong>Kmodel</strong>, that is the handle of current model.</p>
+<p>Based on the info generated in the function Kriging_info, this function predicts the value y and mean square error mse at the points contained in x:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">y</span><span class="p">,</span><span class="n">mse</span><span class="p">]</span> <span class="o">=</span> <span class="n">Kriging_pred</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">Kmodel</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In demo script, we predict all points in observation list:</p>
+<div class="highlight-python"><div class="highlight"><pre>for i = 1:gridLen
+    [P(i), MSE(i)] = Kriging_pred(G(i, :), Kmodel);
+    EI(i) = eiMaximum(P(i), values, MSE(i));
+    % EI(i) = eiMinimum(P(i), values, MSE(i));
+end
+</pre></div>
+</div>
+</div>
+<div class="section" id="co-kriging">
+<h2>Co-Kriging<a class="headerlink" href="#co-kriging" title="Permalink to this headline">¶</a></h2>
+<p>Suppose there are two sets of data:</p>
+<ul class="simple">
+<li>High fidelity data: <strong>samples_high</strong> and <strong>values_high</strong>.</li>
+<li>Low fidelity data : <strong>sample_low</strong> and <strong>values_low</strong>.</li>
+</ul>
+<p>Given the inputs matrix <strong>samples_high</strong>, <strong>samples_low</strong>, <strong>values_high</strong> and <strong>values_low</strong>, declares the global variables ModelInfo.Xe, ModelInfo.Xc, ModelInfo.ye, and ModelInfo.yc respectively. This function generates and stores the information about the corresponding co-kriging model as a global variable and outputs it:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">CKmodel</span> <span class="o">=</span> <span class="n">coKriging_info</span><span class="p">(</span><span class="n">samples_high</span><span class="p">,</span> <span class="n">samples_low</span><span class="p">,</span> <span class="n">values_high</span><span class="p">,</span> <span class="n">values_low</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Given the input scalar x and the input structure CKmodel, this function will construct a function f_hat to model the given data from the four matrices inside the Info structure. It will output this function as well as a generated error mse using the mean square error:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">f_hat</span><span class="p">,</span><span class="n">mse</span><span class="p">]</span> <span class="o">=</span> <span class="n">coKriging_pred</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">CKmodel</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Prediction all points:</p>
+<div class="highlight-python"><div class="highlight"><pre>for i = 1:gridLen
+    [P(i), MSE(i)] = coKriging_pred(G(i, :), CKmodel);
+    EI(i) = eiMaximum(P(i), values, MSE(i));
+    % EI(i) = eiMinimum(P(i), values, MSE(i));
+end
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="uncertainty-measurement">
+<h1>Uncertainty Measurement<a class="headerlink" href="#uncertainty-measurement" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="mean-square-error-mse">
+<h2>Mean Square Error (MSE)<a class="headerlink" href="#mean-square-error-mse" title="Permalink to this headline">¶</a></h2>
+<p>Kriging has some useful stochastical properties, it has been  developed to have ability to  measure the uncertainty of surrogate,</p>
+</div>
+<div class="section" id="expected-improvement-ei">
+<h2>Expected Improvement (EI)<a class="headerlink" href="#expected-improvement-ei" title="Permalink to this headline">¶</a></h2>
+<p>Target to</p>
+<ul class="simple">
+<li>Maximization Problem, use <strong>eiMaximum</strong>.</li>
+<li>Minimization Problem, use <strong>eiMinimum</strong>.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Modeling</a><ul>
+<li><a class="reference internal" href="#kriging">Kriging</a></li>
+<li><a class="reference internal" href="#co-kriging">Co-Kriging</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#uncertainty-measurement">Uncertainty Measurement</a><ul>
+<li><a class="reference internal" href="#mean-square-error-mse">Mean Square Error (MSE)</a></li>
+<li><a class="reference internal" href="#expected-improvement-ei">Expected Improvement (EI)</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="initial.html"
+                        title="previous chapter">Initialization</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="infilling.html"
+                        title="next chapter">Infilling</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/modeling.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="infilling.html" title="Infilling"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="initial.html" title="Initialization"
+             >previous</a> |</li>
+        <li><a href="index.html">SAT User Guide 0.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, NTU COLA Lab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

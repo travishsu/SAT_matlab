@@ -1,14 +1,14 @@
 function info = Kriging_info(X, Y)
+%> @file Kriging_info.m
 %=================================================
-%> Given N data with dimension numDim, create a handle of Kriging model.
+%> @brief Given N data with dimension numDim, create a handle of Kriging model.
 %>
-%> Input
-%>       X   :  N-by-numDim matrix, sample(feature) data,   ex: [x1; x2; x3;...; xN]
-%>       Y   :  N-by-1 vector, response corresponding to X, ex: [y1; y2; y3;...; yN]
-%> Output
-%>       info:  
-%>
+%> @param   X       N-by-numDim matrix, sample(feature) data,   ex: [x1; x2; x3;...; xN]
+%> @param   y       N-by-1 vector, response corresponding to X, ex: [y1; y2; y3;...; yN]
+%> 
+%> @retval  info    Handle of Kriging model.
 %=================================================
+
     info.SigmaSq = -100;
 
     NAN = isnan(Y);

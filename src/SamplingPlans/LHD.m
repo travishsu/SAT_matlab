@@ -1,20 +1,17 @@
 function Initial = LHD(numInitial, numDim, window)
-
-%> =================================================
+%> @file LHD.m
+%=================================================
+%> @brief Latin hypercube design sampling
+%>
 %> For numDim-dimensional region bounded in window, generate a 
 %> Latin-Hypercube Design 
 %> 
-%>   Input
-%>       numInitial:     Integer number, number of designs
-%>       numDim    :     Integer number, dimension of designs
-%>       window    :     1-by-2*numDim vector, region's edges in each dimension
-%>                       ex1: 2D square region [xlb, xub] x [ylb, yub] 
-%>                            --> window = [xlb, xub, ylb, yub]
-%>                       ex2: 3D cubic region [xlb, xub] x [ylb, yub] x [zlb, zub] 
-%>                            --> window = [xlb, xub, ylb, yub, zlb, zub] 
-%>   Output
-%>       Initial   :     numInitial-by-numDim matrix, a design over region in window
-%> =================================================
+%> @param numInitial Integer number, number of designs
+%> @param numDim     Integer number, dimension of designs
+%> @param window     1-by-2*numDim vector, region's edges in each dimension
+%>         
+%> @retval Initial   numInitial-by-numDim matrix, a design over region in window
+%=================================================
 
 
 lowerbound = zeros(numDim, 1);

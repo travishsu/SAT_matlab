@@ -1,5 +1,18 @@
 function Info = coKriging_info(Xe, Xc, Ye, Yc)
 
+%> @file coKriging_info.m
+%=================================================
+%> @brief Given two sets of data, create a handle of Co-Kriging model.
+%>
+%> @param   Xe       N-by-numDim matrix, high-fidelity sample(feature) data,   ex: [xe1; xe2; xe3;...; xeN]
+%> @param   Xc       M-by-numDim matrix,  low-fidelity sample(feature) data,   ex: [xc1; xc2; xc3;...; xcM]
+%> @param   Ye       N-by-1 vector, response corresponding to Xe, ex: [ye1; ye2; ye3;...; yeN]
+%> @param   Yc       M-by-1 vector, response corresponding to Xc, ex: [yc1; yc2; yc3;...; ycM]
+%> 
+%> @retval  Info    Handle of Co-Kriging model.
+%=================================================
+
+
     global ModelInfo
     ModelInfo.Xe = Xe;
     ModelInfo.Xc = Xc;
